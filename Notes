@@ -1,0 +1,44 @@
+BACKEND
+
+npm init -y
+npm i express
+npm i nodemon -D
+npm i dotenv
+npm i mongoose
+npm i validator =>userModel la email id validate panna
+npm i bcryptjs =>user password encrypt panna 
+npm i jsonwebtoken=>client kitta iruthu vara data va server ku json format la safe aa anupum
+npm i cookie-parser
+npm i crypto =>forgetpassword reset panna use aagum
+npm i nodemailer =>forgetpassword email anupa
+npm i express-fileupload
+npm i cloudinary
+
+npm audit fix
+mnax nmxo rzsp kndb =>gmail la app password create panna id
+
+
+FRONTEND
+npm create vite@latest .
+npm install tailwindcss @tailwindcss/vite
+npm i react-router-dom 
+npm i lucide-react =>For Logo
+npm i react-hot-toast
+npm i @reduxjs/toolkit react-redux
+npm i axios
+
+
+
+
+
+
+
+
+
+D:\Full Stack\E-COMMERCE\backend> netstat -ano | findstr :8000
+
+  TCP    0.0.0.0:8000           0.0.0.0:0              LISTENING       7804
+  TCP    [::]:8000              [::]:0                 LISTENING       7804
+PS D:\Full Stack\E-COMMERCE\backend> tasklist | findstr 7804
+postgres.exe                  7804 Services                   0      3,648 K
+PS D:\Full Stack\E-COMMERCE\backend> 
