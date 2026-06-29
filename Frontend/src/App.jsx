@@ -11,6 +11,8 @@ import { useEffect } from "react";
 import { loadUser } from "./features/user/userSlice";
 import Profile from "./User/Profile";
 import UpdateProfile from "./User/UpdateProfile";
+import ProtectedRoute from "./components/ProtectedRoute";
+import UpdatePassword from "./User/UpdatePassword";
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -32,8 +34,18 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/about-US" element={<About />} />
         <Route path="/Contact-US" element={<Contact />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/profile/update" element={<UpdateProfile />} />
+        <Route
+          path="/profile"
+          element={<ProtectedRoute element={<Profile />} />}
+        />
+        <Route
+          path="/profile/update"
+          element={<ProtectedRoute element={<UpdateProfile />} />}
+        />
+        <Route
+          path="/password/update"
+          element={<ProtectedRoute element={<UpdatePassword />} />}
+        />
       </Routes>
     </BrowserRouter>
   );

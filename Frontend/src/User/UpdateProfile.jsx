@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import {
+  loadUser,
+  removeErrors,
+  removeSuccess,
+  updateProfile,
+} from "../features/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
-const updateProfile = () => {
+const UpdateProfile = () => {
   const { user, error, success, loading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [avatar, setAvatar] = useState("");
@@ -17,12 +28,27 @@ const updateProfile = () => {
         setPreview(user.avatar.url);
       }
     }
-  }, [user]);
+
+    if (error) {
+      toast.error(error, { position: "top-center", autoclose: "3000" });
+      dispatch(removeErrors());
+    }
+
+    if (success) {
+      toast.success("Profile Updated Successfully", {
+        position: "top-center",
+        autoclose: "3000",
+      });
+      dispatch(loadUser());
+      navigate("/profile");
+      dispatch(removeSuccess());
+    }
+  }, [user, dispatch, error, success]);
 
   const handleChange = (e) => {
     const reader = new FileReader();
     reader.onload = () => {
-      if (reader.readyState == 2) {
+      if (reader.readyState === 2) {
         setPreview(reader.result);
         setAvatar(reader.result);
       }
@@ -41,7 +67,9 @@ const updateProfile = () => {
     for (const [key, value] of myForm.entries()) {
       console.log(key, value);
     }
+    dispatch(updateProfile(myForm));
   };
+
   return (
     <>
       <Navbar />
@@ -54,7 +82,7 @@ const updateProfile = () => {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-10 px-6 shadow rounded-xl sm:px-10 border border-gray-100">
             <form
-              encType="multipart-gray-100"
+              encType="multipart/form-data"
               onSubmit={updateProfileSubmit}
               className="space-y-6"
             >
@@ -132,4 +160,4 @@ const updateProfile = () => {
   );
 };
 
-export default updateProfile;
+export default UpdateProfile;

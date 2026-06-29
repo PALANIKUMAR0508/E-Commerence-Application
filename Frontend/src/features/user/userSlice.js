@@ -7,12 +7,12 @@ export const register = createAsyncThunk(
   "user/register",
   async (userData, { rejectWithValue }) => {
     try {
-      //   const config = {
-      //     headers: {
-      //       "content-Type": "multipart/form-data", //form data use panrom because we are sending image data
-      //     },
-      //   };
-      const { data } = await axios.post("/api/v1/register", userData); //db la store pannithu response vanthurum
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data", //form data use panrom because we are sending image data
+        },
+      };
+      const { data } = await axios.post("/api/v1/register", userData, config); //db la store pannithu response vanthurum
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -45,7 +45,7 @@ export const login = createAsyncThunk(
     try {
       const config = {
         headers: {
-          "content-Type": "application/json",
+          "Content-Type": "application/json",
         },
       };
       const { data } = await axios.post(
@@ -55,7 +55,7 @@ export const login = createAsyncThunk(
       );
       console.log("Login Data", data);
       return data;
-    } catch {
+    } catch (error) {
       return rejectWithValue(
         error.response?.data || "Login failed.Please try again later",
       );
@@ -79,6 +79,49 @@ export const logout = createAsyncThunk(
   },
 );
 
+//Update Profile
+
+export const updateProfile = createAsyncThunk(
+  "user/updateProfile",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.put(
+        "/api/v1/profile/update",
+        userData,
+        config,
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Profile Update failed");
+    }
+  },
+);
+
+//Update Password
+export const updatePassword = createAsyncThunk(
+  "user/updatePassword",
+  async (password, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.put(
+        "api/v1/password/update",
+        password,
+        config,
+      );
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Password Update failed");
+    }
+  },
+);
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -189,7 +232,7 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(logout.fulfilled, (state, action) => {
+      .addCase(logout.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
         state.user = null;
@@ -201,6 +244,45 @@ const userSlice = createSlice({
         state.loading = false;
         state.error =
           action.payload?.message || "Logout failed. Please try again later";
+      });
+
+    //Update Profile Function
+    builder
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = action.payload.success;
+        state.user = action.payload?.user || state.user;
+        localStorage.setItem("user", JSON.stringify(state.user));
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload?.message ||
+          "Profile update failed. Please try again later";
+      });
+
+    //Update Password
+
+    builder
+      .addCase(updatePassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updatePassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = action.payload.success;
+      })
+      .addCase(updatePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload?.message ||
+          "Password update failed. Please try again later";
       });
   },
 });

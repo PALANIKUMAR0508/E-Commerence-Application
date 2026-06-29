@@ -47,12 +47,18 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="w-full mt-8">
+            <div className="w-full mt-8 flex gap-4 flex-col sm:flex-row">
               <Link
                 to="/profile/update"
-                className="flex items-center justify-center px-4 py-3 border border-transparent  font-medium rounded-xl shadow-md shadow-indigo-00  text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all active:scale-[0.98]"
+                className="w-full flex items-center justify-center px-4 py-3 border border-transparent  font-medium rounded-xl shadow-md shadow-indigo-00  text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all active:scale-[0.98]"
               >
                 Edit Profile
+              </Link>
+              <Link
+                to="/password/update"
+                className="w-full flex items-center justify-center px-4 py-3 border border-transparent  font-medium rounded-xl shadow-md shadow-indigo-00  text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all active:scale-[0.98]"
+              >
+                Change Password
               </Link>
             </div>
           </div>

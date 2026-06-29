@@ -4,6 +4,7 @@ import { sendToken } from "../helper/jwtToken.js";
 import { sendEmail } from "../helper/sendEmail.js";
 import { v2 as cloudinary } from "cloudinary";
 import crypto from "crypto";
+
 // User Register controller function
 export const registerUser = async (req, res, next) => {
   try {
@@ -282,7 +283,8 @@ export const updateProfile = async (req, res, next) => {
       await cloudinary.uploader.destroy(imageId);
     }
     const myCloud = await cloudinary.uploader.upload(
-      `data:${file.mimetype};base64,${file.data.toString("base64")}`,
+      avatar,
+      //`data:${file.mimetype};base64,${file.data.toString("base64")}`,
       {
         folder: "avatarImage",
         width: 150,
