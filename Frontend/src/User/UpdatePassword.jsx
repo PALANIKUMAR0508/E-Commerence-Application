@@ -60,7 +60,7 @@ const UpdatePassword = () => {
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white px-6 py-10 shadow-xl rounded-2xl sm:px-10 border border-gray-100">
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={updatePasswordSubmit}>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 ml-1">
                   Old Password
@@ -112,8 +112,11 @@ const UpdatePassword = () => {
                     transition-all"
                 />
               </div>
-              <div className="">
-                <button className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white rounded-xl w-full px-4 py-3 text-xl font-semibold">
+              <div>
+                <button
+                  type="submit"
+                  className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white rounded-xl w-full px-4 py-3 text-xl font-semibold"
+                >
                   Change Password
                 </button>
               </div>

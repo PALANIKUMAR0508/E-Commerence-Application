@@ -254,13 +254,13 @@ export const profile = async (req, res, next) => {
 // Update user Password controller function
 
 export const updatePassword = async (req, res, next) => {
-  const { oldPassword, newPassword, conformPassword } = req.body;
+  const { oldPassword, newPassword, confirmPassword } = req.body;
   const user = await User.findById(req.user.id).select("+password");
   const isCorrect = await user.verifyPassword(oldPassword);
   if (!isCorrect) {
     return next(new HandleError("Old Password is incorrect", 400));
   }
-  if (newPassword !== conformPassword) {
+  if (newPassword !== confirmPassword) {
     return next(
       new HandleError("New Password and confirm Password does not match", 400),
     );
@@ -268,6 +268,9 @@ export const updatePassword = async (req, res, next) => {
   user.password = newPassword;
   await user.save();
   sendToken(user, 200, res);
+  // console.log(req.body);
+  // console.log("newPassword:", newPassword);
+  // console.log("confirmPassword:", confirmPassword);
 };
 
 // Update user Profile controller function

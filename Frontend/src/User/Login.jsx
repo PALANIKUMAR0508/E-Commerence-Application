@@ -93,7 +93,17 @@ const Login = () => {
               to="/register"
               className="text-indigo-600 font-semibold hover:underline"
             >
-              Sign up
+              Sign up Here
+            </Link>
+          </p>
+
+          <p className="text-center text-sm text-gray-700">
+            Forgot your password?
+            <Link
+              to="/password/forgot"
+              className="px-1 text-indigo-600 font-semibold hover:underline"
+            >
+              Reset Password
             </Link>
           </p>
         </form>

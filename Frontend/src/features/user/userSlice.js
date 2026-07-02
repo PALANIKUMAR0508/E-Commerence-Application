@@ -113,15 +113,18 @@ export const updatePassword = createAsyncThunk(
         },
       };
       const { data } = await axios.put(
-        "api/v1/password/update",
+        "/api/v1/password/update",
         password,
         config,
       );
+      return data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Password Update failed");
     }
   },
 );
+
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
