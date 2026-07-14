@@ -1,11 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import PageTitle from "../components/pageTitle";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  removeErrors,
+  removeSuccess,
+  resetPassword,
+} from "../features/user/userSlice";
 
 const ResetPassword = () => {
+  const { error, loading, success, message } = useSelector(
+    (state) => state.user,
+  );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { token } = useParams(); //token get panna
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error, { position: "top-center", autoClose: 3000 });
+      dispatch(removeErrors());
+    }
+
+    if (success) {
+      toast.success("Password Reset Successfully", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      dispatch(removeSuccess());
+      navigate("/login");
+    }
+  }, [dispatch, error, success]);
 
   const resetPasswordSubmit = (e) => {
     e.preventDefault();
@@ -16,7 +46,10 @@ const ResetPassword = () => {
       });
       return;
     }
+
     const data = { password, confirmPassword };
+
+    dispatch(resetPassword({ token, userDate: data }));
   };
 
   return (
