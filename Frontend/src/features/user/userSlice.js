@@ -124,6 +124,29 @@ export const updatePassword = createAsyncThunk(
   },
 );
 
+//Forget Password
+export const forgetPassword = createAsyncThunk(
+  "user/forgetPassword",
+  async ({ email }, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        "/api/v1/password/forget",
+        { email },
+        config,
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "forget Password failed");
+    }
+  },
+);
+
+//
 
 const userSlice = createSlice({
   name: "user",
@@ -286,6 +309,23 @@ const userSlice = createSlice({
         state.error =
           action.payload?.message ||
           "Password update failed. Please try again later";
+      });
+
+    //Forget Password
+    builder
+      .addCase(forgetPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgetPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = action.payload.success;
+        state.message = action.payload.message;
+      })
+      .addCase(forgetPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Forget password failed";
       });
   },
 });
