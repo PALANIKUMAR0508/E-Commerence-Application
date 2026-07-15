@@ -49,7 +49,7 @@ const ResetPassword = () => {
 
     const data = { password, confirmPassword };
 
-    dispatch(resetPassword({ token, userDate: data }));
+    dispatch(resetPassword({ token, userData: data }));
   };
 
   return (

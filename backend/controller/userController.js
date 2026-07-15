@@ -149,7 +149,7 @@ export const forgetPassword = async (req, res, next) => {
       new HandleError("Could not save reset token,Try again later...", 500),
     );
   }
-  const resetPasswordUrl = `${req.protocol}:/${req.host}/reset/${resetToken}`;
+  const resetPasswordUrl = `${req.protocol}://localhost:5173/reset/${resetToken}`;
   //console.log(resetPasswordUrl);
   const message = `Reset your password using the link below:\n${resetPasswordUrl}\n\n The link expires in 30 minutes.\n\n If this wasn't you,please ignore this message.`;
   const messageHTML = `

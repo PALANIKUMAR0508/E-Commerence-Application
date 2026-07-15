@@ -152,8 +152,9 @@ export const resetPassword = createAsyncThunk(
   async ({ token, userData }, { rejectWithValue }) => {
     try {
       const config = {
-        headers: { "content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" },
       };
+      console.log("USERDATA:", userData);
       const { data } = await axios.post(
         `/api/v1/reset/${token}`,
         userData,
