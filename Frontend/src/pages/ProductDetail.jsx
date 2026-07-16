@@ -21,13 +21,25 @@ import {
 import toast from "react-hot-toast";
 import { calculateDiscount, formatDate } from "../utils/formatter";
 import { useState } from "react";
+import { addToCart, removeMessage } from "../features/cart/cartSlice";
 
 const ProductDetail = () => {
-  const { userRating, setUserRating } = useState(0);
+  const [userRating, setUserRating] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+
   const { product, loading, error } = useSelector((state) => state.product);
+
+  const {
+    loading: cartLoading,
+    error: cartError,
+    cart,
+    success,
+    message,
+  } = useSelector((state) => state.cart);
   const { id } = useParams();
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (id) {
       dispatch(getProductDetails(id));
@@ -41,6 +53,40 @@ const ProductDetail = () => {
     }
   }, [dispatch, error]);
 
+  useEffect(() => {
+    if (success) {
+      toast.success(message, { position: "top-center", autoClose: 300 });
+      dispatch(removeMessage);
+    }
+  }, [dispatch, success, message]);
+
+  const increaseQuantity = () => {
+    if (product.stock <= quantity) {
+      toast.error("Cannot exceed available stock", {
+        position: "top-center",
+        autoClose: 300,
+      });
+      dispatch(removeErrors());
+      return;
+    }
+    setQuantity(quantity + 1);
+  };
+  const decreaseQuantity = () => {
+    if (quantity <= 1) {
+      toast.error("Quantity Cannot be less than 1", {
+        position: "top-center",
+        autoclose: "3000",
+      });
+      dispatch(removeErrors());
+      return;
+    }
+    setQuantity(quantity - 1);
+  };
+
+  const addToCartHandler = () => {
+    dispatch(addToCart({ id, quantity }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <PageTitle title={`${product?.name} | Details`} />
@@ -52,7 +98,7 @@ const ProductDetail = () => {
           <div>
             <div className="aspect-square overflow-hidden rounded-xl">
               <img
-                src={product?.image[0].url}
+                src={product?.image?.[0]?.url}
                 alt={product?.name}
                 className="w-full h-full object-cover tracking-transform hover:scale-105 duration-700"
                 title={product?.name}
@@ -67,7 +113,7 @@ const ProductDetail = () => {
             <div className="flex items-center gap-4 mb-4">
               <Rating value={product?.ratings} disabled={true} />
               <span className="text-sm text-gray-500 font-medium">
-                {product?.num0fReviews} Verified Reviews
+                {product?.numOfReviews} Verified Reviews
               </span>
             </div>
             <div className="mb-5 flex items-baseline gap-3">
@@ -106,22 +152,35 @@ const ProductDetail = () => {
               {product?.stock > 0 && (
                 <div className="flex flex-wrap items-center gap-4">
                   <div className="flex items-center border-2 border-gray-100 rounded-xl bg-white overflow-hidden">
-                    <button className="p-4 hover:bg-gray-50 hover:text-amber-600 transition-colors">
+                    <button
+                      onClick={decreaseQuantity}
+                      className="p-4 hover:bg-gray-50 hover:text-amber-600 transition-colors"
+                    >
                       <Minus size={18} />
                     </button>
-                    <span className="w-5 text-center font-bold text-gray-800">
-                      1
+                    <span className="w-10 text-center font-bold text-gray-800">
+                      {quantity}
                     </span>
-                    <button className="p-4 hover:bg-gray-50 hover:text-amber-600 transition-colors">
+                    <button
+                      onClick={increaseQuantity}
+                      className="p-4 hover:bg-gray-50 hover:text-amber-600 transition-colors"
+                    >
                       <Plus size={18} />
                     </button>
                   </div>
                   <button
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-2xl 
-                flex items-center justify-center gap-3 transition-all shadow-xl shadow-blue-100 active:scale-95"
+                    onClick={addToCartHandler}
+                    className={`flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-2xl 
+                flex items-center justify-center gap-3 transition-all shadow-xl shadow-blue-100 active:scale-95 ${cartLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                   >
-                    <ShoppingCart />
-                    Add To Cart
+                    {cartLoading ? (
+                      "Adding..."
+                    ) : (
+                      <>
+                        <ShoppingCart />
+                        Add To Cart
+                      </>
+                    )}
                   </button>
                 </div>
               )}
@@ -158,7 +217,7 @@ const ProductDetail = () => {
             </h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {product?.reviews.map((rev, index) => (
+            {product?.reviews?.map((rev, index) => (
               <div
                 key={index}
                 className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-amber-200 transition-colors group"
