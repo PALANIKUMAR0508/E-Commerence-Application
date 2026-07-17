@@ -15,6 +15,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import UpdatePassword from "./User/UpdatePassword";
 import ForgetPassword from "./User/ForgetPassword";
 import ResetPassword from "./User/ResetPassword";
+import Cart from "./cart/cart";
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -50,6 +51,7 @@ const App = () => {
         />
         <Route path="/password/forgot" element={<ForgetPassword />} />
         <Route path="/reset/:token" element={<ResetPassword />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </BrowserRouter>
   );

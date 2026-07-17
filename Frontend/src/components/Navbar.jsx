@@ -9,6 +9,7 @@ const Navbar = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user); //user register panni iruthu tha hidden
   const [searchQuery, setSearchQuery] = useState("");
   const [profileDropDownOpen, setProfileDropDownOpen] = useState(false);
+  const { cartItems } = useSelector((state) => state.cart);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -94,9 +95,11 @@ const Navbar = () => {
             className="relative text-gray-700 hover:text-blue-600 transition-normal"
           >
             <ShoppingCart />
-            <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-semibold min-w-5 h-5 rounded-full flex items-center justify-center">
-              6
-            </span>
+            {cartItems.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-semibold min-w-5 h-5 rounded-full flex items-center justify-center">
+                {cartItems.length}
+              </span>
+            )}
           </Link>
 
           {/*Register*/}

@@ -23,7 +23,7 @@ export const addToCart = createAsyncThunk(
 );
 
 const initialState = {
-  cartItems: [],
+  cartItems: JSON.parse(localStorage.getItem("cartItems")) || [],
   loading: false,
   error: null,
   success: false,
@@ -38,6 +38,17 @@ const cartSlice = createSlice({
     },
     removeMessage: (state) => {
       state.message = null;
+    },
+    //Cart la add panna products delete panna
+    clearCart: (state) => {
+      state.cartItems = [];
+      localStorage.removeItem("cartItems");
+    },
+    removeItemFromCart: (state, action) => {
+      state.cartItems = state.cartItems.filter(
+        (i) => i.product !== action.payload,
+      );
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
   },
   extraReducers: (builder) => {
@@ -60,10 +71,10 @@ const cartSlice = createSlice({
           state.cartItems.push(item);
           state.message = `${action.payload.name} added to cart`;
         }
-        state.cartItems.push();
         state.loading = false;
         state.error = null;
         state.success = true;
+        localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.loading = false;
@@ -72,5 +83,6 @@ const cartSlice = createSlice({
   },
 });
 
-export const { removeErrors, removeMessage } = cartSlice.actions;
+export const { removeErrors, removeMessage, removeItemFromCart, clearCart } =
+  cartSlice.actions;
 export default cartSlice.reducer;
