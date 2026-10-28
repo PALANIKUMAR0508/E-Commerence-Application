@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import user from "../models/userModel.js";
 //Middleware to verify user authentication using JWT token from cookies
 export const verifyUser = async (req, res, next) => {
-  const { token } = req.cookies; //cookie parser use panni cookie la irukura token va destructure panni eduthutu irukkom
+  const { token } = req.cookies; //cookie parser use panni cookie la irukura token na destructure panni eduthutu irukkom
   //console.log(token);
   if (!token) {
     return next(
